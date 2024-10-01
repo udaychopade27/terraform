@@ -14,3 +14,7 @@ resource "local_file" "file" {
     content = "This is sample file created using terraform"
 }
 
+output "local_file_content" {
+    value = local_file.file.content
+} 
+
