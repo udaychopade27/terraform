@@ -11,9 +11,25 @@ provider "aws"  {
     region = "ap-south-1"
 }
 
-resource "
+resource "aws_s3_bucket" "bucket" {
+    bucket = "devops-bucket-uday"
+    force_destroy = true
+    versioning {
+        enabled = false
+    }
+}
 
-resource "aws_instance" "example" {
-  ami           = "ami-011899242bb902164" # Ubuntu 20.04 LTS // us-east-1
-  instance_type = "t2.micro"
+resource "aws_s3_bucket_lifecycle_configuration" "my_bucket_lifecycle" {
+  bucket = aws_s3_bucket.bucket.bucket
+  rule {
+    id     = "expire-objects"
+    status = "Enabled"
+
+    filter {
+      prefix = ""  # Apply to all objects
+    }
+    expiration {
+      days = 7
+    }
+  }
 }
