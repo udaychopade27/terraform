@@ -11,10 +11,10 @@ provider local{}
 
 resource "local_file" "file" {
     filename = "file.txt"
-    content = "This is sample file created using terraform"
+    content = "This is sample file created using terraform and output "
 }
 
-output "local_file_content" {
+output "file_content" {
     value = local_file.file.content
 } 
 
