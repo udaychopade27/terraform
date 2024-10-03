@@ -8,11 +8,11 @@ terraform {
 }
 
 provider "aws"  {
-    region = "ap-south-1"
+    region = var.region
 }
 
 resource "aws_s3_bucket" "bucket" {
-    bucket = "devops-bucket-uday"
+    bucket = var.bucket_name
     force_destroy = true
     versioning {
         enabled = false
@@ -35,8 +35,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "my_bucket_lifecycle" {
 }
 
 resource "aws_instance" "Instance_1" {
-    ami           = "ami-0522ab6e1ddcc7055"
-    instance_type = "t2.micro"
+    ami           = var.ami
+    instance_type = var.instance_type
     user_data = <<-EOF
               #!/bin/bash
               echo "Hello, World!" > /var/www/html/index.html
@@ -44,6 +44,3 @@ resource "aws_instance" "Instance_1" {
 }
 
 
-output "instance_public_ip" {
-  value = aws_instance.Instance_1.public_ip
-}
