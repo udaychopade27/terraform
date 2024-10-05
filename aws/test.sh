@@ -16,4 +16,4 @@ jq -r '.instance_ip_addr.value'|\
 xargs -I {} curl http://{}:8080 -m 10
 
 #if request is succeed ,then destroy the resource
-terraform destroy -auto-approve 
+terraform destroy -auto-approve

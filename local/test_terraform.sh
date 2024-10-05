@@ -8,11 +8,11 @@ terraform init
 terraform apply -auto-approve
 
 #wait for some for resource crestion
-sleep 60
+sleep 10
 
 #query the output , extract the content and make a request
 terraform output -json | \
-jq -r 'local_file.file.filename' |\
+jq -r '..filename' |\
 #jq -r '.instance_ip_addr.value'|\
 #xargs -I {} curl http://{}:8080 -m 10
 
