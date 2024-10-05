@@ -26,3 +26,28 @@ resource "azurerm_virtual_network" "example" {
   location            = azurerm_resource_group.example.location
   address_space       = ["10.0.0.0/16"]
 }
+
+data "google_compute_image" "my_image" {
+  family  = "debian-11"
+  project = "debian-cloud"
+}
+
+resource "google_compute_network" "vpc_network" {
+  name = "terraform-network"
+}
+resource "google_compute_instance" "vm_instance" {
+  name         = "terraform-instance"
+  machine_type = "f1-micro"
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-11"
+    }
+  }
+
+  network_interface {
+    network = google_compute_network.vpc_network.name
+    access_config {
+    }
+  }
+}
