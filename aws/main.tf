@@ -33,34 +33,32 @@ resource "aws_s3_bucket_lifecycle_configuration" "my_bucket_lifecycle" {
     }
   }
 }
-resource "aws_default_vpc" "default" {
-  tags = {
-    Name = "Default VPC"
-  }
+data "aws_vpc" "default_vpc" {
+  default = true
 }
 
-resource "aws_security_group" "test" {
-  name        = "allow_tls"
-  description = "Allow TLS inbound traffic and all outbound traffic"
-  vpc_id      = aws_default_vpc.default.id
 
-  tags = {
-    Name = "allow_tls"
-  }
+resource "aws_security_group" "instances" {
+  name = "instance-security-group"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "allow_tls_ipv4" {
-  security_group_id = aws_security_group.test.id
-  cidr_ipv4         = aws_default_vpc.default.cidr_block
-  from_port         = 8080
-  ip_protocol       = "tcp"
-  to_port           = 8080
+resource "aws_security_group_rule" "allow_http_inbound" {
+  type              = "ingress"
+  security_group_id = aws_security_group.instances.id
+
+  from_port   = 8080
+  to_port     = 8080
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
 }
+
+
+
 
 resource "aws_instance" "Instance_1" {
     ami           = var.ami
     instance_type = var.instance_type
-    vpc_security_group_ids = [aws_security_group.test.id]
+    vpc_security_group_ids = [aws_security_group.instances.id]
     user_data = <<-EOF
               #!/bin/bash
               sudo yum install python3 -y
