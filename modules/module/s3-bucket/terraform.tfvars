@@ -1,0 +1,1 @@
+bucket_name = "uday-123-devops"
